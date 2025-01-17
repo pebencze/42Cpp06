@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <limits>
+# include <iomanip>
 
 class ScalarConverter {
     public:
