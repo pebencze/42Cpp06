@@ -2,12 +2,16 @@
 # define SCALARCONVERTER_HPP
 
 # include <iostream>
+# include <limits>
 
 class ScalarConverter {
     public:
+        static void convert(std::string const &literal);
+
+    private:
         ScalarConverter(); //default constructor
-        ScalarConverter(const std::string &name); //parameterized constructor
-        ScalarConverter(const ScalarConverter &src); //copy constructor
+        ScalarConverter(const std::string &); //parameterized constructor
+        ScalarConverter(const ScalarConverter &); //copy constructor
         ~ScalarConverter(); //destructor
 
         ScalarConverter &operator=(const ScalarConverter &rhs); //operator overload
