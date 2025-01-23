@@ -90,7 +90,6 @@ void ScalarConverter::convert(std::string const &literal) {
       int i = 0;
       float f = 0.0f;
       double d = 0.0;
-      //double validArgCheck;
       
       if (Utils::specialCases(literal))
          return ;
