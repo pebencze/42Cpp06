@@ -13,7 +13,7 @@ int main(void) {
 
     for (int i = 0; i < 5; i++) {
         array[i] = generate();
-        usleep(500);
+        usleep(800000);
     }
 
     std::cout << std::endl;
