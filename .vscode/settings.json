@@ -41,7 +41,11 @@
         "variant": "cpp",
         "algorithm": "cpp",
         "type_traits": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "chrono": "cpp",
+        "array": "cpp",
+        "charconv": "cpp",
+        "optional": "cpp"
     },
     "[json]": {
         "editor.quickSuggestions": {

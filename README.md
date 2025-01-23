@@ -24,3 +24,32 @@ This is *commonly used in serialization* scenarios where you need to:
 Convert a pointer to an integer value (for storage or transmission)
 Later convert that integer value back to the original pointer type
 
+## Dynamic Cast
+Only works on polymorphic classes. 
+
+## To Repeat
+
+class Base {
+    public:
+        ~Base() { }  // Non-virtual destructor
+};
+
+class Derived : public Base {
+    private:
+        int* ptr;
+    public:
+        Derived() : ptr(new int(42)) { }
+        ~Derived() { delete ptr; }  // Won't be called in some cases!
+};
+
+int main() {
+    // Case 1 - SAFE: Direct Derived pointer
+    Derived* d = new Derived();
+    delete d;  // Calls Derived destructor, then Base destructor
+
+    // Case 2 - UNSAFE: Base pointer to Derived
+    Base* b = new Derived();
+    delete b;  // Only calls Base destructor! Memory leak!
+}
+
+
