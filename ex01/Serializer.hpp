@@ -2,15 +2,19 @@
 # define SERIALIZER_HPP
 
 # include <iostream>
+# include "Data.hpp"
 
 class Serializer {
     public:
-        Serializer(); //default constructor
-        Serializer(const std::string &name); //parameterized constructor
-        Serializer(const Serializer &src); //copy constructor
         ~Serializer(); //destructor
 
-        Serializer &operator=(const Serializer &rhs); //operator overload
+        static uintptr_t serialize(Data* ptr);
+        static Data* deserialize(uintptr_t raw);
 
+    private:
+        Serializer(); //default constructor
+        Serializer(const std::string &); //parameterized constructor
+        Serializer(const Serializer &); //copy constructor
+        Serializer &operator=(const Serializer &rhs); //operator overload
 };
 #endif

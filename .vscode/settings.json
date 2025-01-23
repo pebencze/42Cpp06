@@ -42,5 +42,12 @@
         "algorithm": "cpp",
         "type_traits": "cpp",
         "iomanip": "cpp"
+    },
+    "[json]": {
+        "editor.quickSuggestions": {
+            "comments": "off",
+            "strings": "on",
+            "other": "off"
+        } 
     }
 }
