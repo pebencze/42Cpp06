@@ -5,6 +5,7 @@
 # include <limits>
 # include <iomanip>
 # include <cmath>
+# include <cerrno>
 
 class ScalarConverter {
     public:
