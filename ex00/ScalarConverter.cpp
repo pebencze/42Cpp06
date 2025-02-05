@@ -22,7 +22,7 @@ ScalarConverter & ScalarConverter::operator=(const ScalarConverter &rhs) {
 }
 
 namespace Utils {
-   int specialCases(std::string const &literal) {
+	int specialCases(std::string const &literal) {
       if (literal == "+inf" || literal == "-inf"
          || literal == "+inff" ||  literal == "-inff"
          || literal == "nan" || literal == "nanf") {
@@ -43,10 +43,39 @@ namespace Utils {
          return (1);
       }
       return (0);
-   }
+	}
+
+	int	checkDigits(const std::string &literal) {
+		int i = 0;
+		int dotCount = 0;
+		int fCount = 0;
+
+		if (literal[i] == '-' || literal[i] == '+')
+			i++;
+		if (!isdigit(literal[i]))
+			return (1);
+		while (literal[++i]) {
+			if (literal[i] == '.' && dotCount == 0) {
+				dotCount++;
+				continue ;
+			}
+			if (literal[i] == 'f' && fCount == 0) {
+				fCount++;
+				continue ;
+			}
+			if (!isdigit(literal[i])) {
+				std::cout << "char: invalid conversion" << std::endl;
+				std::cout << "int: invalid conversion" << std::endl;
+				std::cout << "float: invalid conversion" << std::endl;
+				std::cout << "double: invalid conversion" << std::endl;
+				return (1);
+			}
+		}
+		return (0);
+	}
 
    void  printCases(char c, int i, float f, double d) {
-      if (!isprint(i))
+      if (i > 127 || !isprint(i))
          std::cout << "char: non displayable" << std::endl;
       else
          std::cout << "char: " << c << std::endl;
@@ -54,76 +83,75 @@ namespace Utils {
          std::cout << "int: overflow" << std::endl;
       else
          std::cout << "int: " << i << std::endl;
-      if (f > std::numeric_limits<float>::max() || f < std::numeric_limits<float>::lowest())
+      if (f == HUGE_VALF || f == -HUGE_VALF || f > std::numeric_limits<float>::max() || f < std::numeric_limits<float>::min())
          std::cout << "float: overflow" << std::endl;
       else
          std::cout << std::fixed << std::setprecision(1) << "float: " << f << "f" << std::endl;
-      if (d > std::numeric_limits<double>::max() || d < std::numeric_limits<double>::lowest())
+      if (d == HUGE_VAL || d == -HUGE_VAL)
          std::cout << "double: overflow" << std::endl;
       else
          std::cout << "double: " << d << std::endl;
    }
 
-/*    void convertToFloat(char *c, int *i, float *f, double *d, std::string const &literal) {
-         *f = atof(literal.c_str());
+	void convertToChar(char *c, int *i, float *f, double *d, std::string const &literal) {
+		*c = static_cast<char>(literal[0]);
+		*i = static_cast<int>(*c);
+		*d = static_cast<double>(*c);
+		*f = static_cast<float>(*c);
+	}
+
+    void convertToFloat(char *c, int *i, float *f, double *d, std::string const &literal) {
+         *f = strtof(literal.c_str(), NULL);
          *d = static_cast<double>(*f);
          *c = static_cast<char>(*f);
          *i = static_cast<int>(*f);
-   } */
-   void convertToDouble(char *c, int *i, float *f, double *d, std::string const &literal) {
-         *d = strtod(literal.c_str(), NULL);
-         *f = static_cast<float>(*d);
-         *c = static_cast<char>(*d);
-         *i = static_cast<int>(*d);
    }
-/*    void convertToInt(char *c, int *i, float *f, double *d, std::string const &literal) {
-         *i = atoi(literal.c_str());
-         *d = static_cast<double>(*i);
-         *c = static_cast<char>(*i);
-         *f = static_cast<float>(*i);
-   } */
+
+	void convertToDouble(char *c, int *i, float *f, double *d, std::string const &literal) {
+		//errno = 0;
+
+		*d = strtod(literal.c_str(), NULL);
+/* 		if (errno == ERANGE) {
+			std::cout << "char: non displayable" << std::endl;
+			std::cout << "int: overflow" << std::endl;
+			std::cout << "float: overflow" << std::endl;
+			std::cout << "double: overflow" << std::endl;
+			return ;
+		} */
+		*f = static_cast<float>(*d);
+		*c = static_cast<char>(*d);
+		*i = static_cast<int>(*d);
+   }
+
+    void convertToInt(char *c, int *i, float *f, double *d, std::string const &literal) {
+		long int temp = strtol(literal.c_str(), NULL, 10);
+         *i = static_cast<int>(temp);
+         *d = static_cast<double>(temp);
+         *c = static_cast<char>(temp);
+         *f = static_cast<float>(temp);
+   }
 }
 
 void ScalarConverter::convert(std::string const &literal) {
-   try {
-      char c = 0;
-      int i = 0;
-      float f = 0.0f;
-      double d = 0.0;
+	char c = 0;
+	int i = 0;
+	float f = 0.0f;
+	double d = 0.0;
 
-      if (Utils::specialCases(literal))
-         return ;
-      if (literal.length() == 1) {
-         c = static_cast<char>(literal[0]);
-         i = static_cast<int>(c);
-         d = static_cast<double>(c);
-         f = static_cast<float>(c);
-         return (Utils::printCases(c, i, f, d));
-/*       } else if (literal.find("f") != std::string::npos && literal.find(".") != std::string::npos) {
-         try {
-            Utils::convertToFloat(&c, &i, &f, &d, literal);
-         } catch (std::exception &e) {
-            Utils::convertToDouble(&c, &i, &f, &d, literal);
-         }
-      } else if (literal.find(".") != std::string::npos) {
-         Utils::convertToDouble(&c, &i, &f, &d, literal); */
-      } else {
-         /* try {
-            Utils::convertToInt(&c, &i, &f, &d, literal);
-         } catch (std::exception &e) { */
-         Utils::convertToDouble(&c, &i, &f, &d, literal);
-      }
-      Utils::printCases(c, i, f, d);
-   } catch (std::invalid_argument &e) {
-      std::cout << "char: invalid conversion" << std::endl;
-      std::cout << "int: invalid conversion" << std::endl;
-      std::cout << "float: invalid conversion" << std::endl;
-      std::cout << "double: invalid conversion" << std::endl;
-   } catch(std::out_of_range &e) {
-      std::cout << "char: non displayable" << std::endl;
-      std::cout << "int: overflow" << std::endl;
-      std::cout << "float: overflow" << std::endl;
-      std::cout << "double: overflow" << std::endl;
-   }
+	if (Utils::specialCases(literal))
+		return ;
+	if (literal.length() == 1 && !isdigit(literal[0]))
+		Utils::convertToChar(&c, &i, &f, &d, literal);
+	else {
+		if (Utils::checkDigits(literal)) {
+			return ;
+		}
+		if (literal.find("f") != std::string::npos && literal.find(".") != std::string::npos)
+			Utils::convertToFloat(&c, &i, &f, &d, literal);
+		else if (literal.find(".") != std::string::npos)
+			Utils::convertToDouble(&c, &i, &f, &d, literal);
+		else
+			Utils::convertToInt(&c, &i, &f, &d, literal);
+	}
+	Utils::printCases(c, i, f, d);
 }
-

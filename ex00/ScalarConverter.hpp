@@ -4,6 +4,7 @@
 # include <iostream>
 # include <limits>
 # include <iomanip>
+# include <cmath>
 
 class ScalarConverter {
     public:
